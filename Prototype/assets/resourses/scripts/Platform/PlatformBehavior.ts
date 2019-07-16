@@ -6,14 +6,11 @@ export default class PlatformBehavior extends cc.Component {
     @property(cc.Color)
     m_color: cc.Color[] = [];
 
-    @property(cc.Animation)
-    m_breakAnimation: cc.Animation = null;
-
     @property m_limitBreak: number = 0;
 
     collisionTime = 0;
     breakTime = 0;
-
+    oneScore = false;
     
 
     onLoad(){
@@ -24,9 +21,6 @@ export default class PlatformBehavior extends cc.Component {
         this.node.getChildByName('PerfectPoint').getComponent(cc.Animation).play('breaking');
         this.node.getComponent(cc.Animation).play('breaking');
         this.node.runAction(cc.sequence(cc.fadeOut(0.3), cc.callFunc(() => {this.node.destroy();}, this)));
-    }
-
-    OnBreak() {
         var pos = this.node.getPosition();
         this.node.parent.parent.parent.getComponent('ScoreManager').GainScore(pos);
     }
@@ -44,9 +38,11 @@ export default class PlatformBehavior extends cc.Component {
                             this.collisionTime ++;
                             if (this.collisionTime == this.m_limitBreak)
                             {
-                                this.OnBreak();
-                                this.scheduleOnce(this.BreakBrick, 0.2);
-                                this.collisionTime = 0;
+                                if (this.node.opacity == 255){
+                                    this.node.opacity -= 1;
+                                    this.BreakBrick();
+                                    this.collisionTime = 0;
+                                }
                             }
                             if (this.collisionTime == this.m_limitBreak - this.breakTime + 1)
                             {
@@ -57,9 +53,11 @@ export default class PlatformBehavior extends cc.Component {
                         }
                         else
                         {
-                            this.OnBreak();
-                            this.scheduleOnce(this.BreakBrick, 0.2);
-                            this.collisionTime = 0;
+                            if (this.node.opacity == 255){
+                                this.node.opacity -= 1;
+                                this.BreakBrick();
+                                this.collisionTime = 0;
+                            }
                             break;   
                         }
                     }
@@ -67,9 +65,11 @@ export default class PlatformBehavior extends cc.Component {
                     {
                         if (this.node.parent.parent.getChildByName('Ball').getComponent('BallManager').powerFull)
                         {
-                            this.OnBreak();
-                            this.scheduleOnce(this.BreakBrick, 0.2);
-                            this.collisionTime = 0;
+                            if (this.node.opacity == 255){
+                                this.node.opacity -= 1;
+                                this.BreakBrick();
+                                this.collisionTime = 0;
+                            }
                             break;   
                         }
                     }
@@ -79,9 +79,11 @@ export default class PlatformBehavior extends cc.Component {
                         {
                             this.node.parent.parent.getChildByName('Ball').getComponent('BallManager').comboStack++;
                         }
-                        this.OnBreak();
-                        this.scheduleOnce(this.BreakBrick, 0.2);
-                        this.collisionTime = 0;
+                        if (this.node.opacity == 255){
+                            this.node.opacity -= 1;
+                            this.BreakBrick();
+                            this.collisionTime = 0;
+                        }
                         break; 
                     }
                 }

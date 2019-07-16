@@ -6,6 +6,9 @@ export default class BallBehavior extends cc.Component {
     @property(cc.Node)
     m_particle: cc.Node = null;
 
+    /*@property(cc.Layout)
+    m_layoutPaused: cc.Layout = null;*/
+
     @property
     m_jumpHeight: number = 0;
     
@@ -47,17 +50,18 @@ export default class BallBehavior extends cc.Component {
             } 
             case 2:
             {
-                this.myParticle.stopSystem();
                 this.node.getComponent(cc.RigidBody).gravityScale = this.firstGravity;
                 this.node.parent.parent.getChildByName('Bonus').getComponent('BonusManager').bonusStack--;
                 if (this.node.parent.parent.getChildByName('Bonus').getComponent('BonusManager').bonusStack == 0)
                 {
-
                     this.node.parent.parent.parent.getComponent('GameManager').GameOver();
                 }
                 else
                 {
-                    this.node.destroy();
+                    //this.node.setPosition(cc.v2(10000,-10000));
+                    this.node.parent.getComponent('BallManager').powerFull = false;
+                    this.node.active = false;
+                    //this.node.destroy();
                     this.node.parent.parent.getChildByName('Bonus').getComponent('BonusManager').DecreaseBonusTime();
                 }
                 break;
@@ -87,12 +91,14 @@ export default class BallBehavior extends cc.Component {
                     this.node.parent.parent.getChildByName('Bonus').getComponent('BonusManager').bonusStack--;
                     if (this.node.parent.parent.getChildByName('Bonus').getComponent('BonusManager').bonusStack == 0)
                     {
-                        this.myParticle.stopSystem();
                         this.node.parent.parent.parent.getComponent('GameManager').GameOver();
                     }
                     else
                     {
-                        this.node.destroy();
+                        this.node.parent.getComponent('BallManager').powerFull = false;
+                        //this.node.setPosition(cc.v2(10000,-10000));
+                        this.node.active = false;
+                        //this.node.destroy();
                         this.node.parent.parent.getChildByName('Bonus').getComponent('BonusManager').DecreaseBonusTime();
                     }
                     break;
@@ -112,7 +118,6 @@ export default class BallBehavior extends cc.Component {
     }
 
 	onLoad() {
-        // this.node.setSiblingIndex(this.node.children.length);
 
         this.myParticle = this.m_particle.getComponent(cc.ParticleSystem);
         this.myParticle.stopSystem();
@@ -129,7 +134,6 @@ export default class BallBehavior extends cc.Component {
     }
 
 	update(dt) {
-
         if (this.node.parent.getComponent('BallManager').powerFull)
         {
             this.myParticle.resetSystem();
@@ -143,62 +147,70 @@ export default class BallBehavior extends cc.Component {
         {
             this.node.getComponent(cc.RigidBody).gravityScale += dt * 5;
         }
-        this.node.parent.parent.parent.on(cc.Node.EventType.TOUCH_START, function(event){
-            this.touchStart = event.touch.getLocation();
-            if (!this.isJumping)
-            {
-                this.isFalling = false;
-                this.isJumping = true;
-            }
-        },this);
 
-        this.node.parent.parent.parent.on(cc.Node.EventType.TOUCH_MOVE, function(event){
-            var delta = this.touchStart.y - this.touchEnd.y;
-            if (delta > this.m_minPixelForSwipe)
-            {
-                this.isJumping = false;
-                this.isFalling = true;
-            }
-        },this);
-
-        this.node.parent.parent.parent.on(cc.Node.EventType.TOUCH_END, function(event){
-            this.touchEnd = event.touch.getLocation();
-            if (this.isJumping)
-            {
-                this.isJumping = false;
-                this.node.parent.parent.parent.getComponent('GameManager').isSwipe = false;
-
-                this.node.parent.parent.parent.getComponent('AudioManager').PlayJumpSound();
-
-                this.node.getComponent(cc.RigidBody).gravityScale = this.firstGravity;
-                this.node.runAction(this.SetJumpAction());
-                this.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speedX,this.speedY);
-            }
-
-            if (this.isFalling)
-            {
-                this.isFalling = false;
-                this.node.parent.parent.parent.getComponent('GameManager').isSwipe = true;
-
-                this.node.parent.parent.parent.getComponent('AudioManager').PlayJumpSound();
-
-                this.node.getComponent(cc.RigidBody).gravityScale = this.firstGravity;
-                this.deltaX = this.touchEnd.x - this.touchStart.x;
-                this.deltaY = -Math.abs(this.touchStart.y - this.touchEnd.y);
-
-                var velocityX = this.deltaX * this.m_fallSpeed;
-                var velocityY = this.deltaY * this.m_fallSpeed;
-                
-
-                if(Math.abs(velocityY) > this.m_maxFallSpeed)
-                {
-                    this.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.m_maxFallSpeed * this.deltaX / Math.abs(this.deltaY), -this.m_maxFallSpeed);
+            this.node.parent.parent.parent.on(cc.Node.EventType.TOUCH_START, function(event){
+                if(!this.node.parent.parent.parent.getComponent("UIManager").m_pauseIngameUI.node.active == true){
+                    this.touchStart = event.touch.getLocation();
+                    if (!this.isJumping)
+                    {
+                        this.isFalling = false;
+                        this.isJumping = true;
+                    }
                 }
-                else 
-                {
-                    this.getComponent(cc.RigidBody).linearVelocity = cc.v2(velocityX, velocityY);
+            },this);
+    
+            this.node.parent.parent.parent.on(cc.Node.EventType.TOUCH_MOVE, function(event){
+                if(!this.node.parent.parent.parent.getComponent("UIManager").m_pauseIngameUI.node.active == true){
+                    var touchEnd = event.touch.getLocationY();
+                    var delta = this.touchStart.y - touchEnd;
+                    if (delta > this.m_minPixelForSwipe)
+                    {
+                        this.isJumping = false;
+                        this.isFalling = true;
+                    }
                 }
-            }
-        },this);
+            },this);
+    
+            this.node.parent.parent.parent.on(cc.Node.EventType.TOUCH_END, function(event){
+                if(!this.node.parent.parent.parent.getComponent("UIManager").m_pauseIngameUI.node.active == true){
+                    this.touchEnd = event.touch.getLocation();
+                    if (this.isJumping)
+                    {
+                        this.isJumping = false;
+                        this.node.parent.parent.parent.getComponent('GameManager').isSwipe = false;
+    
+                        this.node.parent.parent.parent.getComponent('AudioManager').PlayJumpSound();
+    
+                        this.node.getComponent(cc.RigidBody).gravityScale = this.firstGravity;
+                        this.node.runAction(this.SetJumpAction());
+                        this.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.speedX,this.speedY);
+                    }
+    
+                    if (this.isFalling)
+                    {
+                        this.isFalling = false;
+                      this.node.parent.parent.parent.getComponent('GameManager').isSwipe = true;
+    
+                        this.node.parent.parent.parent.getComponent('AudioManager').PlayJumpSound();
+                    
+                        this.node.getComponent(cc.RigidBody).gravityScale = this.firstGravity;
+                        this.deltaX = this.touchEnd.x - this.touchStart.x;
+                        this.deltaY = -Math.abs(this.touchStart.y - this.touchEnd.y);
+                    
+                        var velocityX = this.deltaX * this.m_fallSpeed;
+                        var velocityY = this.deltaY * this.m_fallSpeed;
+                    
+    
+                        if(Math.abs(velocityY) > this.m_maxFallSpeed)
+                        {
+                            this.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.m_maxFallSpeed * this.deltaX / Math.abs(this.deltaY), -this.m_maxFallSpeed);
+                        }
+                        else 
+                        {
+                            this.getComponent(cc.RigidBody).linearVelocity = cc.v2(velocityX, velocityY);
+                        }
+                    }
+                }
+            },this);
     }
 }

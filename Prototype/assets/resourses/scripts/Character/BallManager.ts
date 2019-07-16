@@ -76,6 +76,7 @@ export default class BallManager extends cc.Component {
     }
 
     ResetBall() {
+        this.powerFull = false;
         this.comboStack = 0;
         this.powerTimer = 0;
     }

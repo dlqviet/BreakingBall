@@ -44,7 +44,6 @@ export default class GameManager extends cc.Component {
         this.isPlaying = true;
         this.m_gameName.active = false;
         this.m_gameOver.active = false;
-        this.m_playButton.active = false;
         this.m_inGame.active = true;
         this.m_ball.getComponent('BallManager').SpawnBall(1);
         this.schedule(this.TimeCounter, 1);
@@ -55,14 +54,14 @@ export default class GameManager extends cc.Component {
         this.m_inGame.active = false;
         this.m_gameOver.active = true;
         this.m_replayButton.active = true;
-        this.DestroyAll();
-        
         this.node.getComponent('AudioManager').PlayDropSound();
         this.getComponent('ScoreManager').DisplayScoreBoard();
-        this.node.getComponent('LevelManager').heightMeasure = 0;
+        this.scheduleOnce(this.DestroyAll,0.1);
+        
     }
 
     ResetGame() {
+        this.node.getComponent('LevelManager').heightMeasure = 0;
         this.node.getComponent('ScoreManager').ResetScore();
         this.m_ball.getComponent('BallManager').ResetBall();
         this.m_bonus.getComponent('BonusManager').ResetBonus();
@@ -76,6 +75,7 @@ export default class GameManager extends cc.Component {
     }
 
     DestroyAll() {
+        //this.m_ball.active = false;
         this.m_ball.destroyAllChildren();
         this.m_platform.destroyAllChildren();
         this.m_spike.destroyAllChildren();

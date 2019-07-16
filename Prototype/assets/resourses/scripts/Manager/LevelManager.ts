@@ -58,17 +58,14 @@ export default class LevelManager extends cc.Component {
 
     heightMeasure = 0;
 
+    onLoad() {
+        
+    }
+
     CheckLevelUp() {
         if (this.node.getComponent('GameManager').gameTimer == this.tmp)
         {  
             this.node.getChildByName('InGame').getChildByName('Platform').getComponent('PlatformManager').UnscheduleSpawn();
-            // this.node.getChildByName('InGame').getChildByName('WallSpike').getComponent('SpikeManager').UnscheduleSpawn();
-        }
-    }
-
-    InitialPlatforms(){
-        for(this.heightMeasure; this.heightMeasure < this.node.height / 2; this.heightMeasure += 120){
-            this.node.getChildByName('InGame').getChildByName('Platform').getComponent('PlatformManager').SpawnNewPlatform();
         }
     }
 
@@ -106,10 +103,6 @@ export default class LevelManager extends cc.Component {
                     }
                     i++;
                 }
-                // if (this.m_level[lvlNo].m_wallSpike)
-                // {
-                //     this.node.getChildByName('InGame').getChildByName('WallSpike').getComponent('SpikeManager').ScheduleSpawn();
-                // }
                 this.node.getChildByName('InGame').getChildByName('Platform').getComponent('PlatformManager').ScheduleSpawn();
                 this.tmp = this.m_level[lvlNo].m_startTime + this.m_level[lvlNo].m_levelTime;
                 break;
@@ -128,9 +121,7 @@ export default class LevelManager extends cc.Component {
         {
             this.CheckLevel();
             this.LoadLevel();
-            this.InitialPlatforms();
             this.CheckLevelUp();
-            
             this.InitialPlatforms();
         }        
     }

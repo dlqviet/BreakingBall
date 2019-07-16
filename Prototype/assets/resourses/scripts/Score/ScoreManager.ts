@@ -15,7 +15,7 @@ export default class ScoreManager extends cc.Component {
     m_highScore: cc.Label = null;
 
     score = 0;
-    bestScore = null;
+    bestScore = 0;
     scorePool = null;
 
     onLoad() {

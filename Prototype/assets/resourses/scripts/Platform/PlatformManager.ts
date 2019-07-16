@@ -21,7 +21,6 @@ export default class PlatformManager extends cc.Component {
             && this.prefabSlot == this.node.parent.parent.getComponent('LevelManager').m_level[this.node.parent.parent.getComponent('LevelManager').levelNo].m_prefabArray[0].m_prefab)
         {
             this.newPlatform.scaleX = 1;
-            console.log('fjhsgjfgsehgsegseghshegsejjghseg');
         }
 
         var random = Math.random();

@@ -31,7 +31,8 @@ public class NormalPlatformBehavior : MonoBehaviour
         if (collision.collider.tag == "Ball")
         {
             Pos = gameObject.transform.position;
-            currentHP--;
+            currentHP -= collision.collider.gameObject.GetComponent<BallBehavior>().damage;
+
 
             if (currentHP == 0)
             {

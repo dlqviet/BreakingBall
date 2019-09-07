@@ -12,6 +12,12 @@ public class NormalPlatformBehavior : MonoBehaviour
 
     private Vector3 Pos;
 
+    public void Die()
+    {
+        scoreManager.GainScore(1, Pos);
+        gameObject.transform.parent.GetComponent<PlatformManager>().DestroyPlatform(gameObject);
+    }
+
     void Start()
     {
         scoreManager = GameObject.Find("Score").GetComponent<ScoreManager>();
@@ -26,10 +32,10 @@ public class NormalPlatformBehavior : MonoBehaviour
         {
             Pos = gameObject.transform.position;
             currentHP--;
+
             if (currentHP == 0)
             {
-                scoreManager.GainScore(1, Pos);
-                Destroy(gameObject);
+                Die();
             }
         }
 

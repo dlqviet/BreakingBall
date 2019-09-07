@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class PlatformManager : MonoBehaviour
 {
-    private GameObject newPlatform;
+    private Queue<GameObject> platformQueue = new Queue<GameObject>();
 
     public void SpawnPlatform(GameObject platformType)
     {
-        newPlatform = Instantiate(platformType, GetPlatformPosition(), transform.rotation);
+        GameObject newPlatform = Instantiate(platformType, GetPlatformPosition(), transform.rotation);
         newPlatform.transform.parent = gameObject.transform;
+        platformQueue.Enqueue(newPlatform);
     }
 
     public Vector2 GetPlatformPosition()
     {
         Vector2 pos;
         pos.x = 0;
-        pos.y = -6;
+        pos.y = 1.2f * platformQueue.Count - 6;
         return pos;
     }
 }

@@ -8,9 +8,19 @@ public class PlatformManager : MonoBehaviour
 
     public void SpawnPlatform(GameObject platformType)
     {
+        platformUp();
         GameObject newPlatform = Instantiate(platformType, GetPlatformPosition(), transform.rotation);
         newPlatform.transform.parent = gameObject.transform;
+
         platformList.Add(newPlatform);
+    }
+
+    public void platformUp()
+    {
+        foreach (GameObject platform in platformList)
+        {
+            platform.GetComponent<Rigidbody2D>().AddForce(transform.up * 2000);
+        }
     }
 
     public void DestroyPlatform(GameObject platform)
@@ -25,7 +35,7 @@ public class PlatformManager : MonoBehaviour
     {
         Vector2 pos;
         pos.x = 0;
-        pos.y = 1.2f * platformList.Count - 6;
+        pos.y = -6;
         return pos;
     }
 }

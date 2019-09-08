@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlatformManager : MonoBehaviour
 {
+    public GameObject prototypePlatform;
     private List<GameObject> platformList = new List<GameObject>();
 
     public void SpawnPlatform(GameObject platformType)
@@ -21,6 +22,11 @@ public class PlatformManager : MonoBehaviour
         {
             platform.GetComponent<Rigidbody2D>().AddForce(transform.up * 2000);
         }
+    }
+
+    public float GetStackHeight()
+    {
+        return prototypePlatform.GetComponent<Renderer>().bounds.size.y * prototypePlatform.transform.localScale.y * platformList.Count;
     }
 
     public void DestroyPlatform(GameObject platform)

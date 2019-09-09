@@ -15,6 +15,8 @@ public class BallBehavior : MonoBehaviour
     private int RL;
     private float veloY;
 
+    [HideInInspector]
+    public int damage = 1;
     public float jumpForce;
     public float jumpWidth;
     public float plungeSpeed;

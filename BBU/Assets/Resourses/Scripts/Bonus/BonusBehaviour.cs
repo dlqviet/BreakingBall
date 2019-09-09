@@ -7,6 +7,7 @@ public class BonusBehaviour : MonoBehaviour
     private BonusManager bonusManager;
     private BallManager ballManager;
     private float countdownTime;
+
     private void Start()
     {
         bonusManager = GetComponentInParent<BonusManager>();

@@ -4,12 +4,37 @@ using UnityEngine;
 
 public class PlatformManager : MonoBehaviour
 {
-    private GameObject newPlatform;
+    public GameObject prototypePlatform;
+    private List<GameObject> platformList = new List<GameObject>();
 
     public void SpawnPlatform(GameObject platformType)
     {
-        newPlatform = Instantiate(platformType, GetPlatformPosition(), transform.rotation);
+        platformUp();
+        GameObject newPlatform = Instantiate(platformType, GetPlatformPosition(), transform.rotation);
         newPlatform.transform.parent = gameObject.transform;
+
+        platformList.Add(newPlatform);
+    }
+
+    public void platformUp()
+    {
+        foreach (GameObject platform in platformList)
+        {
+            platform.GetComponent<Rigidbody2D>().AddForce(transform.up * 2000);
+        }
+    }
+
+    public float GetStackHeight()
+    {
+        return prototypePlatform.GetComponent<Renderer>().bounds.size.y * prototypePlatform.transform.localScale.y * platformList.Count;
+    }
+
+    public void DestroyPlatform(GameObject platform)
+    {
+        if (platformList.Remove(platform))
+        {
+            Destroy(platform);
+        }
     }
 
     public Vector2 GetPlatformPosition()

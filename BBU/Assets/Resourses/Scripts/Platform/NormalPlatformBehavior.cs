@@ -14,6 +14,12 @@ public class NormalPlatformBehavior : MonoBehaviour
 
     private Vector3 Pos;
 
+    public void Die()
+    {
+        scoreManager.GainScore(1, Pos);
+        gameObject.transform.parent.GetComponent<PlatformManager>().DestroyPlatform(gameObject);
+    }
+
     void Start()
     {
         scoreManager = GameObject.Find("Score").GetComponent<ScoreManager>();
@@ -45,7 +51,13 @@ public class NormalPlatformBehavior : MonoBehaviour
         if (collision.collider.tag == "Ball")
         {
             Pos = gameObject.transform.position;
-            HP--;
+            currentHP -= collision.collider.gameObject.GetComponent<BallBehavior>().damage;
+
+
+            if (currentHP == 0)
+            {
+                Die();
+            }
         }
 
         if (collision.collider.name == "Roof")

@@ -7,15 +7,12 @@ public class ScoreManager : MonoBehaviour
 {
     public GameObject TotalScore;
     public GameObject Score;
+    public CoinManager CoinManager;
     public float displayTime;
-
-    private int score = 0;
-
-    private Text totalScoreText;
 
     void Start()
     {
-        totalScoreText = TotalScore.GetComponent<Text>();
+        
     }
 
     public void GainScore(int gainScore, Vector3 pos)
@@ -23,7 +20,6 @@ public class ScoreManager : MonoBehaviour
         GameObject scoreDisplay = Instantiate(Score, pos, Quaternion.identity);
         scoreDisplay.transform.parent = gameObject.transform;
 
-        score += gainScore;
-        totalScoreText.text = "" + score;
+        CoinManager.CollectCoin(gainScore);
     }
 }

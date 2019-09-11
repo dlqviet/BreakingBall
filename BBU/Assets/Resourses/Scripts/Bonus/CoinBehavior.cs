@@ -10,7 +10,7 @@ public class CoinBehavior : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ball")
         {
-            gameObject.transform.parent.gameObject.GetComponent<CoinManager>().CollectCoin();
+            gameObject.transform.parent.gameObject.GetComponent<CoinManager>().CollectCoin(1);
             Destroy(gameObject);
         }
     }

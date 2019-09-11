@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine.UI;
 using UnityEngine;
 
 public class CoinManager : MonoBehaviour
 {
     public GameObject Coin;
+    public Text CoinNumber;
     public float minSpawnDuration;
     public float maxSpawnDuration;
 
@@ -48,15 +48,16 @@ public class CoinManager : MonoBehaviour
     }
 
     // function is called buy CoinBehavior whenever a coin get collected
-    public void CollectCoin()
+    public void CollectCoin(int coins)
     {
-        coinCollected += 1;
-        Debug.Log(coinCollected);
+        coinCollected += coins;
+        CoinNumber.text = coinCollected.ToString();
     }
 
     private void Awake()
     {
         coinCollected = 0;
+        CoinNumber.text = coinCollected.ToString();
         worldWidth = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0));
         worldHeight = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height, 0));
     }

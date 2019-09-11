@@ -26,7 +26,7 @@ public class PlatformManager : MonoBehaviour
 
     public float GetStackHeight()
     {
-        return prototypePlatform.GetComponent<Renderer>().bounds.size.y * prototypePlatform.transform.localScale.y * platformList.Count;
+        return prototypePlatform.GetComponent<Renderer>().bounds.size.y * platformList.Count;
     }
 
     public void DestroyPlatform(GameObject platform)

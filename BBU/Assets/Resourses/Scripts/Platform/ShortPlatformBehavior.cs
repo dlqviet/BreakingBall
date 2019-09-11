@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NormalPlatformBehavior : MonoBehaviour
+public class ShortPlatformBehavior : MonoBehaviour
 {
     private ScoreManager scoreManager;
     private GameManager gameManager;
@@ -47,13 +47,11 @@ public class NormalPlatformBehavior : MonoBehaviour
                 case 4:
                     perfectPoints[3].SetActive(true);
                     break;
-                case 5:
-                    perfectPoints[4].SetActive(true);
-                    break;
             }
         }
         else
         {
+            perfectPoints[1].SetActive(true);
             perfectPoints[2].SetActive(true);
         }
     }
